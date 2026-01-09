@@ -147,7 +147,7 @@ const LeadsTable = () => {
       {/* Table */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 hidden md:table">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -235,6 +235,48 @@ const LeadsTable = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile stacked cards */}
+        <div className="md:hidden p-4 space-y-4">
+          {leads.length === 0 ? (
+            <div className="text-center text-gray-500">No leads found</div>
+          ) : (
+            leads.map((lead) => (
+              <div key={lead._id} className="bg-white rounded-lg shadow p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="font-semibold text-gray-900">{lead.name}</div>
+                    <div className="text-sm text-gray-600">{lead.email} • {lead.phone}</div>
+                    <div className="text-sm text-gray-500 mt-2">{lead.company || '-'}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-gray-500">{format(new Date(lead.createdAt), 'MMM dd, yyyy')}</div>
+                    <div className="mt-2 flex items-center justify-end space-x-2">
+                      <select
+                        value={lead.status}
+                        onChange={(e) => handleStatusChange(lead._id, e.target.value)}
+                        className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusBadge(lead.status)}`}
+                      >
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="qualified">Qualified</option>
+                        <option value="converted">Converted</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-3">
+                  <button onClick={() => alert(`View details for: ${lead.name}`)} className="text-blue-600">
+                    <FaEye />
+                  </button>
+                  <button onClick={() => handleDelete(lead._id)} className="text-red-600">
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Pagination */}

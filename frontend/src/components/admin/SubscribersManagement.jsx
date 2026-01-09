@@ -75,7 +75,8 @@ const SubscribersManagement = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table className="min-w-full">
+        <div className="overflow-x-auto">
+          <table className="min-w-full hidden md:table">
           <thead className="bg-white border-b-2 border-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800">Email Address</th>
@@ -113,12 +114,29 @@ const SubscribersManagement = () => {
               </tr>
             ))}
           </tbody>
-        </table>
-        {subscribers.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            No subscribers yet
-          </div>
-        )}
+          </table>
+        </div>
+
+        {/* Mobile stacked cards */}
+        <div className="md:hidden p-4 space-y-4">
+          {subscribers.map((sub) => (
+            <div key={sub._id} className="bg-white shadow rounded-lg p-4 flex items-center justify-between">
+              <div>
+                <div className="font-medium text-gray-900">{sub.email}</div>
+                <div className="text-sm text-gray-500">{new Date(sub.createdAt).toLocaleDateString()}</div>
+              </div>
+              <div>
+                <button onClick={() => handleDelete(sub._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                  <FaTrash size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {subscribers.length === 0 && (
+            <div className="text-center py-12 text-gray-500">No subscribers yet</div>
+          )}
+        </div>
       </div>
     </div>
   );

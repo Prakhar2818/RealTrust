@@ -68,7 +68,8 @@ const ContactsManagement = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table className="min-w-full">
+        <div className="overflow-x-auto">
+          <table className="min-w-full hidden md:table">
           <thead className="bg-white border-b-2 border-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800">Full Name</th>
@@ -118,12 +119,37 @@ const ContactsManagement = () => {
               </tr>
             ))}
           </tbody>
-        </table>
-        {filteredContacts.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            No contact submissions found
-          </div>
-        )}
+          </table>
+        </div>
+
+        {/* Mobile stacked cards */}
+        <div className="md:hidden p-4 space-y-4">
+          {filteredContacts.map((contact) => (
+            <div key={contact._id} className="bg-white shadow rounded-lg p-4">
+              <div className="flex items-start gap-4">
+                <div className="text-2xl text-blue-600"><FaEnvelope /></div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-gray-900">{contact.name}</div>
+                    <div className="text-sm text-gray-500">{new Date(contact.createdAt).toLocaleDateString()}</div>
+                  </div>
+                  <div className="text-gray-600 text-sm mt-2">{contact.email}</div>
+                  <div className="text-gray-600 text-sm mt-1">{contact.phone || 'N/A'}</div>
+                  <div className="text-gray-600 text-sm mt-1">{contact.city || 'N/A'}</div>
+                </div>
+              </div>
+              <div className="flex justify-end mt-3">
+                <button onClick={() => handleDelete(contact._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                  <FaTrash size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {filteredContacts.length === 0 && (
+            <div className="text-center py-12 text-gray-500">No contact submissions found</div>
+          )}
+        </div>
       </div>
     </div>
   );

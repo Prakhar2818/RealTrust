@@ -155,7 +155,8 @@ const ClientsManagement = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table className="min-w-full">
+        <div className="overflow-x-auto">
+          <table className="min-w-full hidden md:table">
           <thead className="bg-white border-b-2 border-gray-200">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-gray-800">Image</th>
@@ -203,7 +204,38 @@ const ClientsManagement = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
+
+        {/* Mobile stacked cards */}
+        <div className="md:hidden p-4 space-y-4">
+          {clients.map((client) => (
+            <div key={client._id} className="bg-white shadow rounded-lg p-4">
+              <div className="flex items-center gap-4">
+                <img
+                  src={getImageUrl(client.image)}
+                  alt={client.name}
+                  className="h-16 w-16 object-cover rounded-full shadow-sm"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold text-gray-900">{client.name}</div>
+                    <div className="text-sm inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full">{client.designation}</div>
+                  </div>
+                  <p className="text-gray-600 text-sm mt-2">{client.description.substring(0, 100)}...</p>
+                </div>
+              </div>
+              <div className="flex justify-end gap-3 mt-3">
+                <button onClick={() => handleEdit(client)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                  <FaEdit size={18} />
+                </button>
+                <button onClick={() => handleDelete(client._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                  <FaTrash size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Modal */}
