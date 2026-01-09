@@ -68,7 +68,13 @@ const Sidebar = () => {
           </div>
         )}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            if (mobileOpen) {
+              setMobileOpen(false);
+            } else {
+              setIsOpen(!isOpen);
+            }
+          }}
           className="p-2 hover:bg-slate-700 rounded-lg transition-colors text-cyan-400"
         >
           {isOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
