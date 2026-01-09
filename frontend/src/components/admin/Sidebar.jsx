@@ -2,13 +2,26 @@ import { NavLink } from 'react-router-dom';
 import { FaProjectDiagram, FaUsers, FaEnvelope, FaMailBulk, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../../assets/images/logo.svg';
 
 const Sidebar = () => {
   const { logout, admin } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      // keep desktop collapsed/expanded state; ensure sidebar is closed on small screens
+      if (window.innerWidth < 768) {
+        setIsOpen(true); // keep full content when visible on mobile
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -22,8 +35,31 @@ const Sidebar = () => {
     { path: '/admin/subscribers', icon: <FaMailBulk />, label: 'Subscribers' },
   ];
 
+  // compute responsive classes: mobile overlay when `mobileOpen`, otherwise desktop width controlled by `isOpen`
+  const baseClasses = 'h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col transition-all duration-300 border-r border-slate-700 shadow-2xl';
+  const desktopWidthClass = isOpen ? 'md:w-64' : 'md:w-20';
+  const mobileTransformClass = mobileOpen ? 'translate-x-0' : '-translate-x-full';
+
   return (
-    <div className={`h-full bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} border-r border-slate-700 shadow-2xl`}>
+    <>
+      {/* Floating hamburger for mobile */}
+      {!mobileOpen && (
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="md:hidden fixed top-4 left-4 z-60 p-2 bg-slate-900/70 text-cyan-400 rounded-lg shadow-lg"
+          aria-label="Open sidebar"
+        >
+          <FaBars size={18} />
+        </button>
+      )}
+
+      {/* Overlay when mobile menu open */}
+      {mobileOpen && <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />}
+
+      <div
+        className={`fixed top-0 left-0 z-50 ${mobileTransformClass} md:translate-x-0 md:relative ${mobileOpen ? 'w-64' : ''} ${desktopWidthClass} ${baseClasses}`}
+        style={{ transitionProperty: 'transform,width' }}
+      >
       {/* Header with Toggle */}
       <div className="p-4 border-b border-slate-700 flex items-center justify-between">
         {isOpen && (
@@ -84,7 +120,8 @@ const Sidebar = () => {
           {isOpen && <span>Logout</span>}
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
