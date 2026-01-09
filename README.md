@@ -129,6 +129,6 @@ Default dev ports used by this project (configurable):
 - **GitHub:** `https://github.com/Prakhar2818`
 
 **Live Demo**
-- **Staging / Live Demo URL:** `https://your-live-demo.example.com` (replace with your demo URL)
+- **Staging / Live Demo URL:** `https://real-trust-dun.vercel.app/admin/clients` (Vercel Deploy)
 - **Frontend Demo (Vite dev):** `http://localhost:5173` (local)
 - **Backend API (local):** `http://localhost:5000/api` (local)
